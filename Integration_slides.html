@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#e8edf2;display:flex;flex-direction:column;align-items:center;padding:24px;gap:16px}
+
+.nav{display:flex;gap:8px;margin-bottom:4px}
+.nav button{padding:7px 18px;border:none;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;background:#c8d4de;color:#1a3a4a;transition:.2s}
+.nav button.active{background:#1a8fa0;color:#fff}
+
+.slide{display:none;width:920px;background:#fff;border-radius:4px;box-shadow:0 4px 24px #0002;overflow:hidden;position:relative;flex-direction:column}
+.slide.active{display:flex}
+
+.accent{position:absolute;left:0;top:0;width:6px;height:100%;background:#1a8fa0}
+
+/* HEADER */
+.hdr{padding:20px 32px 14px 46px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #e0e8ed}
+.hdr h1{font-size:20px;font-weight:700;color:#0d2d3a}
+.hdr p{font-size:12px;color:#5a7a8a;margin-top:3px}
+.tag{font-size:10px;font-weight:700;color:#fff;background:#1a8fa0;padding:4px 12px;border-radius:2px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* BODY */
+.body{padding:16px 32px 16px 46px;flex:1;display:flex;flex-direction:column;gap:12px}
+
+/* FOOTER */
+.ftr{padding:8px 32px 8px 46px;background:#f0f5f7;border-top:1px solid #dde8ec;display:flex;justify-content:space-between;align-items:center}
+.ftr span{font-size:10px;color:#8aaabb}
+.ftr .pg{font-weight:700;color:#1a8fa0;font-size:11px}
+.logo{font-size:11px;font-weight:800;color:#1a8fa0}.logo span{color:#0d2d3a}
+
+/* KPI */
+.kpi-row{display:flex;gap:10px}
+.kpi{flex:1;border-left:3px solid #1a8fa0;padding:9px 12px;background:#f2f8fa}
+.kpi .num{font-size:24px;font-weight:800;color:#1a8fa0;line-height:1}
+.kpi .lbl{font-size:10.5px;color:#4a6a7a;margin-top:3px;line-height:1.4}
+.kpi .sub{font-size:9px;color:#8aaabb;margin-top:2px}
+
+/* BANNER */
+.banner{background:#0d2d3a;border-radius:2px;padding:14px 20px;color:#fff}
+.banner h2{font-size:14px;font-weight:700;margin-bottom:4px;color:#7dd8e0}
+.banner p{font-size:11.5px;line-height:1.6;color:#cde6ec}
+
+/* FACT CARDS */
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fact{background:#f5f9fa;padding:12px 14px;border-top:2px solid #1a8fa0}
+.fact h4{font-size:11.5px;font-weight:700;color:#0d2d3a;margin-bottom:3px}
+.fact p{font-size:11px;color:#4a5a6a;line-height:1.5}
+
+/* ── ROADMAP ── */
+.rm{width:100%;display:flex;flex-direction:column;gap:0;font-size:10.5px}
+
+/* timeline axis row */
+.rm-axis{display:flex;align-items:center;margin-bottom:6px;padding-left:138px;gap:0;position:relative}
+.rm-axis-line{flex:1;height:2px;background:#0d2d3a;position:relative}
+.rm-axis-line::after{content:'▶';position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:9px;color:#0d2d3a}
+/* col labels sit above bars */
+.rm-cols{display:grid;grid-template-columns:138px 1.8fr 3.6fr 2fr;gap:0;padding:0 0 4px 0}
+.rm-col-lbl{font-size:10px;font-weight:700;font-style:italic;color:#0d2d3a;text-align:center}
+
+/* swim lane group */
+.rm-group{border:1.5px solid #bfcfd6;border-radius:2px;margin-bottom:5px;overflow:hidden}
+.rm-group-hdr{background:#fff;padding:4px 10px;font-size:11px;font-weight:700;color:#0d2d3a;border-bottom:1px solid #dde8ed}
+
+/* each task row: label col + 3 time cols */
+.rm-task{display:grid;grid-template-columns:138px 1.8fr 3.6fr 2fr;min-height:22px;border-top:1px solid #eef3f5}
+.rm-task:first-of-type{border-top:none}
+.rm-lbl{padding:3px 8px;font-size:9.5px;color:#2a4050;display:flex;align-items:center;background:#f7fbfc;border-right:1px solid #dde8ed}
+.rm-c{padding:3px 4px;display:flex;align-items:center}
+.rm-bar{border-radius:2px;padding:2px 8px;font-size:9px;color:#0d2d3a;width:100%;display:flex;align-items:center}
+.b1{background:#d4eef2}
+.b2{background:#e8f4d4}
+.b3{background:#ede0f8}
+
+/* PHASES */
+.phases{display:flex;gap:10px}
+.phase{flex:1;background:#f5f9fa;padding:12px 14px;border-top:3px solid}
+.phase .pl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8aaabb;margin-bottom:4px}
+.phase h3{font-size:12px;font-weight:700;color:#0d2d3a;margin-bottom:6px}
+.phase ul{padding-left:13px;font-size:10.5px;color:#3a5060;line-height:1.7}
+.crits{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.crit{background:#f2f8fa;padding:10px 12px;border-left:3px solid #1a8fa0}
+.crit h4{font-size:11px;font-weight:700;color:#0d2d3a;margin-bottom:3px}
+.crit p{font-size:10px;color:#4a6070;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button class="active" onclick="show(0)">1 · Opportunity & Value</button>
+  <button onclick="show(1)">2 · Roadmap</button>
+  <button onclick="show(2)">3 · What Success Looks Like</button>
+</div>
+
+<!-- ═══ SLIDE 1 ═══ -->
+<div class="slide active">
+  <div class="accent"></div>
+  <div class="hdr">
+    <div><h1>Environmental 2.0</h1><p>Reinventing Quentic Environmental Management · Q1 2026 Update</p></div>
+    <div class="tag">Opportunity &amp; Value</div>
+  </div>
+  <div class="body">
+    <div class="banner">
+      <h2>🌍 Transforming environmental data into climate insights</h2>
+      <p>Quentic becomes the <strong>only EHS platform in Europe</strong> that natively combines workplace safety management with GHG Protocol-based climate reporting — in a single system, for EHS professionals with environmental data responsibilities.</p>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="num">2026</div><div class="lbl">Target: first sellable release to early adopters</div></div>
+      <div class="kpi"><div class="num">€1.71M</div><div class="lbl">CARR addressable in 2026</div><div class="sub">Environment module · 377 customers · ca. 2.9% of total</div></div>
+      <div class="kpi"><div class="num">€5.98M</div><div class="lbl">CARR addressable by 2027</div><div class="sub">Env + Sustainability + 70% ESG · 577 customers · ca. 49% of total</div></div>
+      <div class="kpi"><div class="num">6–12 mo</div><div class="lbl">Committed horizon for visible, measurable progress</div></div>
+    </div>
+    <div class="facts">
+      <div class="fact"><h4>💶 New revenue potential</h4><p>Removes top sales blockers. Reduces total cost of ownership. Significant existing customer upgrade potential.</p></div>
+      <div class="fact"><h4>🏗️ Zero waste or inconsistency</h4><p>Net-new module built within Quentic's architecture, design system, and master data.</p></div>
+      <div class="fact"><h4>🔌 High extensibility</h4><p>Designed for feature expansion and upgrading customers from existing modules.</p></div>
+      <div class="fact"><h4>🤖 AI-accelerated development</h4><p>AI tools applied across product and engineering to compress planning and delivery timelines.</p></div>
+    </div>
+  </div>
+  <div class="ftr"><span class="logo">Quentic <span>· an AMCS company</span></span><span class="pg">1 / 3</span></div>
+</div>
+
+<!-- ═══ SLIDE 2 — ROADMAP ═══ -->
+<div class="slide">
+  <div class="accent"></div>
+  <div class="hdr">
+    <div><h1>2026 Delivery Roadmap</h1><p>Parallel work streams · ESG Product, Engineering &amp; Architecture, Sales &amp; GTM</p></div>
+    <div class="tag">Roadmap</div>
+  </div>
+  <div class="body" style="padding-top:14px">
+  <style>
+    .rm-outer{display:flex;gap:6px;width:100%}
+    .rm-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:0}
+    /* vertical side lanes */
+    .rm-side{display:flex;gap:4px}
+    .rm-vlane{width:58px;display:flex;flex-direction:column;gap:0}
+    .rm-vhdr{background:#0d2d3a;color:#fff;font-size:8.5px;font-weight:700;text-align:center;padding:4px 3px;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);flex-shrink:0;letter-spacing:.3px}
+    .rm-vbody{flex:1;display:flex;flex-direction:column;gap:3px;padding:4px 3px}
+    .rm-vtag{background:#f2f8fa;border:1px solid #bfcfd6;border-radius:2px;font-size:8px;color:#2a4050;text-align:center;padding:3px 2px;flex:1;display:flex;align-items:center;justify-content:center}
+    .rm-vtag.esg{background:#f0f6ff;border-color:#1a8fa0;color:#0d4a5a}
+    .rm-vtag.eng{background:#f4f9f0;border-color:#5a9a5a;color:#1a4a1a}
+  </style>
+    <div class="rm-outer">
+
+      <!-- MAIN SWIM LANES -->
+      <div class="rm-main">
+        <!-- col labels + axis -->
+        <div style="display:grid;grid-template-columns:138px 1.8fr 3.6fr 2fr;gap:0;padding-bottom:3px">
+          <div></div>
+          <div class="rm-col-lbl">Mar – Apr</div>
+          <div class="rm-col-lbl">May – Sep</div>
+          <div class="rm-col-lbl">Oct – Nov</div>
+        </div>
+        <div style="display:flex;align-items:center;padding-left:138px;margin-bottom:7px">
+          <div style="flex:1;height:2px;background:#0d2d3a;position:relative">
+            <span style="position:absolute;right:-7px;top:50%;transform:translateY(-50%);font-size:9px;color:#0d2d3a">▶</span>
+          </div>
+        </div>
+
+        <!-- ESG PRODUCT -->
+        <div class="rm-group">
+          <div class="rm-group-hdr">ESG Product</div>
+          <div class="rm-task">
+            <div class="rm-lbl">Conceptualising features</div>
+            <div class="rm-c"><div class="rm-bar b1">Mar – Apr</div></div>
+            <div class="rm-c"></div><div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">PoCs with Engineering</div>
+            <div class="rm-c"><div class="rm-bar b1">Mar – Apr</div></div>
+            <div class="rm-c"></div><div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">Validate ideas with customers &amp; stakeholders</div>
+            <div class="rm-c"><div class="rm-bar b1" style="opacity:.45">Mar – Apr</div></div>
+            <div class="rm-c"><div class="rm-bar b2">May – Sep</div></div>
+            <div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">Collaborate on development</div>
+            <div class="rm-c"></div>
+            <div class="rm-c"><div class="rm-bar b2">May – Sep</div></div>
+            <div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">First early adopter</div>
+            <div class="rm-c"></div><div class="rm-c"></div>
+            <div class="rm-c"><div class="rm-bar b3">Oct – Nov</div></div>
+          </div>
+        </div>
+
+        <!-- ENGINEERING & ARCHITECTURE -->
+        <div class="rm-group">
+          <div class="rm-group-hdr">Engineering &amp; Architecture</div>
+          <div class="rm-task">
+            <div class="rm-lbl">Integration architecture</div>
+            <div class="rm-c"><div class="rm-bar b1">Mar – Apr</div></div>
+            <div class="rm-c"></div><div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">Tech assessment</div>
+            <div class="rm-c"><div class="rm-bar b1">Mar – Apr</div></div>
+            <div class="rm-c"></div><div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">Active development</div>
+            <div class="rm-c"></div>
+            <div class="rm-c" style="grid-column:span 2;padding-right:4px"><div class="rm-bar b2" style="width:100%">Apr – Nov</div></div>
+          </div>
+        </div>
+
+        <!-- SALES & GTM -->
+        <div class="rm-group">
+          <div class="rm-group-hdr">Sales &amp; GTM</div>
+          <div class="rm-task">
+            <div class="rm-lbl">Value proposition &amp; commercial definition</div>
+            <div class="rm-c"><div class="rm-bar b1">Mar – Apr</div></div>
+            <div class="rm-c"></div><div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">Early adopter pipeline identified</div>
+            <div class="rm-c"></div>
+            <div class="rm-c"><div class="rm-bar b2">May – Sep</div></div>
+            <div class="rm-c"></div>
+          </div>
+          <div class="rm-task">
+            <div class="rm-lbl">Sales materials prepared</div>
+            <div class="rm-c"></div>
+            <div class="rm-c"><div class="rm-bar b2">May – Sep</div></div>
+            <div class="rm-c"></div>
+          </div>
+        </div>
+      </div><!-- end rm-main -->
+
+      <!-- VERTICAL SIDE LANES -->
+      <div class="rm-side" style="align-items:flex-start;margin-top:32px">
+
+        <!-- Lane 1: Learning Quentic — spans ESG Product + Eng & Arch groups -->
+        <div class="rm-vlane" id="vlane-lq"></div>
+
+        <!-- Lane 2: Branding Alignment — spans ESG Product group only -->
+        <div class="rm-vlane" id="vlane-ba"></div>
+
+      </div>
+
+    </div><!-- end rm-outer -->
+  </div>
+  <div class="ftr"><span class="logo">Quentic <span>· an AMCS company</span></span><span class="pg">2 / 3</span></div>
+</div>
+
+<!-- ═══ SLIDE 3 ═══ -->
+<div class="slide">
+  <div class="accent"></div>
+  <div class="hdr">
+    <div><h1>What Success Looks Like</h1><p>Phased growth from first release to full climate management</p></div>
+    <div class="tag">Success Criteria &amp; Phased Growth</div>
+  </div>
+  <div class="body">
+    <div class="phases">
+      <div class="phase" style="border-color:#1a8fa0">
+        <div class="pl">Phase 1 · 2026</div>
+        <h3>EHS + Climate Insight</h3>
+        <ul>
+          <li>Scope 1 &amp; 2 emissions calculation</li>
+          <li>Internal climate reporting simplified</li>
+          <li>Same infrastructure as EHS</li>
+          <li>1–2 user journeys released</li>
+          <li>Early adopter sales · Oct 2026</li>
+        </ul>
+      </div>
+      <div class="phase" style="border-color:#2e6da0">
+        <div class="pl">Phase 2 · 2027</div>
+        <h3>Advanced Climate Insight</h3>
+        <ul>
+          <li>Scope 3 emissions (ML estimation)</li>
+          <li>Audit trail &amp; EF management</li>
+          <li>Sustainability module customers upgraded</li>
+          <li>70% of ESG base migrated</li>
+          <li>Beyond DACH market growth</li>
+        </ul>
+      </div>
+      <div class="phase" style="border-color:#a06020">
+        <div class="pl">Phase 3 · Future</div>
+        <h3>Climate Management &amp; CSRD</h3>
+        <ul>
+          <li>Metrics, targets, scenario modelling</li>
+          <li>ESG reporting frameworks (GRI, CDP)</li>
+          <li>CSRD reporting pack (TBD)</li>
+          <li>CSAT as growth lever</li>
+        </ul>
+      </div>
+    </div>
+    <div class="crits">
+      <div class="crit"><h4>✅ Visible Progress (6–12 months)</h4><p>1–2 integrated user journeys shipped and validated with early adopters before year end.</p></div>
+      <div class="crit"><h4>💰 New Revenue</h4><p>Top 1–2 sales blockers removed; early adopter deals closed. €1.71M CARR in 2026, rising to €5.98M by 2027.</p></div>
+      <div class="crit"><h4>📊 Controlled Disruption</h4><p>CSAT impact actively monitored. Customer migration is not in scope for 2026.</p></div>
+      <div class="crit"><h4>🔄 Gradual Transition</h4><p>Resources shift progressively from standalone ESG work into integration.</p></div>
+    </div>
+  </div>
+  <div class="ftr"><span class="logo">Quentic <span>· an AMCS company</span></span><span class="pg">3 / 3</span></div>
+</div>
+
+<script>
+function sizeVLanes(){
+  const esgGroup = document.querySelector('.rm-group:nth-of-type(1)');
+  const engGroup = document.querySelector('.rm-group:nth-of-type(2)');
+  const lq = document.getElementById('vlane-lq');
+  const ba = document.getElementById('vlane-ba');
+  if(!esgGroup||!engGroup||!lq||!ba) return;
+
+  const esgH = esgGroup.offsetHeight;
+  const engH = engGroup.offsetHeight;
+  const gap = 5; // matches rm-group margin-bottom
+
+  // Learning Quentic: ESG + gap + Eng & Arch
+  const lqH = esgH + gap + engH;
+  lq.innerHTML = `<div class="rm-vhdr" style="height:${lqH}px;width:22px;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:center;background:#0d2d3a;color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.3px;padding:6px 3px;border-radius:2px">Learning Quentic</div>`;
+
+  // Branding alignment: ESG only
+  ba.innerHTML = `<div class="rm-vhdr" style="height:${esgH}px;width:22px;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:center;background:#0d2d3a;color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.3px;padding:6px 3px;border-radius:2px">Branding alignment based on EHS</div>`;
+}
+
+// run after render and on tab switch
+window.addEventListener('load', sizeVLanes);
+
+function show(i){
+  document.querySelectorAll('.slide').forEach((s,j)=>s.classList.toggle('active',j===i));
+  document.querySelectorAll('.nav button').forEach((b,j)=>b.classList.toggle('active',j===i));
+  setTimeout(sizeVLanes, 50);
+}
+</script>
+</body>
+</html>
